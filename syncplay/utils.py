@@ -11,6 +11,9 @@ import random
 import string
 import urllib
 import ast
+import unicodedata
+import platform
+import subprocess
 
 folderSearchEnabled = True
 
@@ -160,13 +163,36 @@ def blackholeStdoutForFrozenWindow():
         sys.stdout = Blackhole()
         del Blackhole
 
+def truncateText(unicodeText, maxLength):
+    try:
+        unicodeText = unicodedata.normalize('NFC', unicodeText)
+    except:
+        pass
+    try:
+        maxSaneLength= maxLength*5
+        if len(unicodeText) > maxSaneLength:
+            unicodeText = unicode(unicodeText.encode("utf-8")[:maxSaneLength], "utf-8", errors="ignore")
+        while len(unicodeText) > maxLength:
+            unicodeText = unicode(unicodeText.encode("utf-8")[:-1], "utf-8", errors="ignore")
+        return unicodeText
+    except:
+        pass
+    return ""
+
 # Relate to file hashing / difference checking:
 
 def stripfilename(filename, stripURL):
     if filename:
+        try:
+            filename = filename.encode('utf-8')
+        except UnicodeDecodeError:
+            pass
         filename = urllib.unquote(filename)
         if stripURL:
-            filename = filename.split(u"/")[-1]
+            try:
+                filename = urllib.unquote(filename.split(u"/")[-1])
+            except UnicodeDecodeError:
+                filename = urllib.unquote(filename.split("/")[-1])
         return re.sub(constants.FILENAME_STRIP_REGEX, "", filename)
     else:
         return ""
@@ -181,12 +207,25 @@ def stripRoomName(RoomName):
         return ""
 
 def hashFilename(filename, stripURL = False):
-    return hashlib.sha256(stripfilename(filename, stripURL).encode('utf-8')).hexdigest()[:12]
+    if isURL(filename):
+        stripURL = True
+    strippedFilename = stripfilename(filename, stripURL)
+    try:
+        strippedFilename = strippedFilename.encode('utf-8')
+    except UnicodeDecodeError:
+        pass
+    filenameHash = hashlib.sha256(strippedFilename).hexdigest()[:12]
+    return filenameHash
 
 def hashFilesize(size):
     return hashlib.sha256(str(size)).hexdigest()[:12]
 
 def sameHashed(string1raw, string1hashed, string2raw, string2hashed):
+    try:
+        if string1raw.lower() == string2raw.lower():
+            return True
+    except AttributeError:
+        pass
     if string1raw == string2raw:
         return True
     elif string1raw == string2hashed:
@@ -197,6 +236,14 @@ def sameHashed(string1raw, string1hashed, string2raw, string2hashed):
         return True
 
 def sameFilename (filename1, filename2):
+    try:
+        filename1 = filename1.encode('utf-8')
+    except UnicodeDecodeError:
+        pass
+    try:
+        filename2 = filename2.encode('utf-8')
+    except UnicodeDecodeError:
+        pass
     stripURL = True if isURL(filename1) ^ isURL(filename2) else False
     if filename1 == constants.PRIVACY_HIDDENFILENAME or filename2 == constants.PRIVACY_HIDDENFILENAME:
         return True
@@ -249,6 +296,33 @@ def getListAsMultilineString(pathArray):
 
 def convertMultilineStringToList(multilineString):
     return unicode.split(multilineString,u"\n") if multilineString else ""
+
+def playlistIsValid(files):
+    if len(files) > constants.PLAYLIST_MAX_ITEMS:
+        return False
+    elif sum(map(len, files)) > constants.PLAYLIST_MAX_CHARACTERS:
+        return False
+    return True
+
+def getDomainFromURL(URL):
+    try:
+        URL = URL.split("//")[-1].split("/")[0]
+        if URL.startswith("www."):
+            URL = URL[4:]
+        return URL
+    except:
+        return None
+
+def open_system_file_browser(path):
+    if isURL(path):
+        return
+    path = os.path.dirname(path)
+    if platform.system() == "Windows":
+        os.startfile(path)
+    elif platform.system() == "Darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
 
 def getListOfPublicServers():
     try:

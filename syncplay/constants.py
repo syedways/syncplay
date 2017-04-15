@@ -9,7 +9,7 @@ UI_TIME_FORMAT = "[%X] "
 CONFIG_NAMES = [".syncplay", "syncplay.ini"]  #Syncplay searches first to last
 DEFAULT_CONFIG_NAME_WINDOWS = "syncplay.ini"
 DEFAULT_CONFIG_NAME_LINUX = ".syncplay"
-RECENT_CLIENT_THRESHOLD = "1.3.0"  #This and higher considered 'recent' clients (no warnings)
+RECENT_CLIENT_THRESHOLD = "1.4.0"  #This and higher considered 'recent' clients (no warnings)
 WARN_OLD_CLIENTS = True  #Use MOTD to inform old clients to upgrade
 LIST_RELATIVE_CONFIGS = True  # Print list of relative configs loaded
 SHOW_CONTACT_INFO = True  # Displays dev contact details below list in GUI
@@ -46,16 +46,26 @@ MINIMUM_SLOWDOWN_THRESHOLD = 1.3
 SLOWDOWN_RESET_THRESHOLD = 0.1
 DIFFERENT_DURATION_THRESHOLD = 2.5
 PROTOCOL_TIMEOUT = 12.5
-RECONNECT_RETRIES = 10
+RECONNECT_RETRIES = 999
 SERVER_STATE_INTERVAL = 1
 WARNING_OSD_MESSAGES_LOOP_INTERVAL = 1
 AUTOPLAY_DELAY = 3.0
+DO_NOT_RESET_POSITION_THRESHOLD = 1.0
 SYNC_ON_PAUSE = True  # Client seek to global position - subtitles may disappear on some media players
+PLAYLIST_MAX_CHARACTERS = 10000
+PLAYLIST_MAX_ITEMS = 250
+MAXIMUM_TAB_WIDTH = 350
+
+# Maximum character lengths (for client and server)
+MAX_CHAT_MESSAGE_LENGTH = 50 # Number of displayed characters
+MAX_USERNAME_LENGTH = 12 # Number of displayed characters
+MAX_ROOM_NAME_LENGTH = 35 # Number of displayed characters
+MAX_FILENAME_LENGTH = 250 # Number of displayed characters
 
 # Options for the File Switch feature:
-FOLDER_SEARCH_FIRST_FILE_TIMEOUT = 10.0 # Secs - How long to wait to find the first file in folder search (to take account of HDD spin up)
-FOLDER_SEARCH_TIMEOUT = 3.0 # Secs - How long to wait until searches in folder to update cache are aborted (after first file is found)
-FOLDER_SEARCH_DOUBLE_CHECK_INTERVAL = 30.0 # Secs - Frequency of updating cache when someone is playing a file not in current cache
+FOLDER_SEARCH_FIRST_FILE_TIMEOUT = 25.0 # Secs - How long to wait to find the first file in folder search (to take account of HDD spin up)
+FOLDER_SEARCH_TIMEOUT = 20.0 # Secs - How long to wait until searches in folder to update cache are aborted (after first file is found)
+FOLDER_SEARCH_DOUBLE_CHECK_INTERVAL = 30.0 # Secs - Frequency of updating cache
 
 #Usually there's no need to adjust these
 LAST_PAUSED_DIFF_THRESHOLD = 2
@@ -73,7 +83,7 @@ COMMANDS_AUTH = ['a','auth']
 COMMANDS_TOGGLE = ['t','toggle']
 MPC_MIN_VER = "1.6.4"
 VLC_MIN_VERSION = "2.2.1"
-VLC_INTERFACE_MIN_VERSION = "0.3.2"
+VLC_INTERFACE_MIN_VERSION = "0.3.3"
 VLC_LATENCY_ERROR_THRESHOLD = 2.0
 MPV_UNRESPONSIVE_THRESHOLD = 60.0
 CONTROLLED_ROOMS_MIN_VERSION = "1.3.0"
@@ -129,7 +139,7 @@ MPV_SENDMESSAGE_COOLDOWN_TIME = 0.05
 MPV_MAX_NEWFILE_COOLDOWN_TIME = 3
 STREAM_ADDITIONAL_IGNORE_TIME = 10
 MPV_LOCK_WAIT_TIME = 0.05
-VLC_OPEN_MAX_WAIT_TIME = 15
+VLC_OPEN_MAX_WAIT_TIME = 20
 VLC_MIN_PORT = 10000
 VLC_MAX_PORT = 55000
 
@@ -143,7 +153,8 @@ STYLE_READY_PUSHBUTTON = "QPushButton { text-align: left; padding: 10px 5px 10px
 STYLE_AUTO_PLAY_PUSHBUTTON = "QPushButton { text-align: left; padding: 5px 5px 5px 5px; }"
 STYLE_NOTIFICATIONBOX = "Username { color: #367AA9; font-weight:bold; }"
 STYLE_CONTACT_INFO = u"<span style=\"color: grey\"><strong><small>{}</span><br /><br />" # Contact info message
-STYLE_USERNAME = "color: #367AA9; font-weight:bold;"
+STYLE_USER_MESSAGE = u"<span style=\"{}\">&lt;{}&gt;</span> {}"
+STYLE_USERNAME = u"color: #367AA9; font-weight:bold;"
 STYLE_ERRORNOTIFICATION = "color: red;"
 STYLE_DIFFERENTITEM_COLOR = 'red'
 STYLE_NOFILEITEM_COLOR = 'blue'
@@ -155,9 +166,9 @@ USERLIST_GUI_USERNAME_COLUMN = 0
 USERLIST_GUI_FILENAME_COLUMN = 3
 
 MPLAYER_SLAVE_ARGS = ['-slave', '--hr-seek=always', '-nomsgcolor', '-msglevel', 'all=1:global=4:cplayer=4', '-af-add', 'scaletempo']
-MPV_ARGS = ['--force-window', '--idle', '--hr-seek=always', '--keep-open', '--af-add=scaletempo']
-MPV_SLAVE_ARGS = ['--quiet', '--input-terminal=no', '--input-file=/dev/stdin']
-MPV_SLAVE_ARGS_NEW = ['--term-playing-msg=<SyncplayUpdateFile>\nANS_filename=${filename}\nANS_length=${=length}\nANS_path=${path}\n</SyncplayUpdateFile>', '--terminal=yes']
+MPV_ARGS = ['--force-window', '--idle', '--hr-seek=always', '--keep-open']
+MPV_SLAVE_ARGS = ['--msg-level=all=error,cplayer=info,term-msg=info', '--input-terminal=no', '--input-file=/dev/stdin']
+MPV_SLAVE_ARGS_NEW = ['--term-playing-msg=<SyncplayUpdateFile>\nANS_filename=${filename}\nANS_length=${=length:${=duration:0}}\nANS_path=${path}\n</SyncplayUpdateFile>', '--terminal=yes']
 MPV_NEW_VERSION = False
 VLC_SLAVE_ARGS = ['--extraintf=luaintf', '--lua-intf=syncplay', '--no-quiet', '--no-input-fast-seek',
                   '--play-and-pause', '--start-time=0']
@@ -170,6 +181,7 @@ UI_COMMAND_REGEX = r"^(?P<command>[^\ ]+)(?:\ (?P<parameter>.+))?"
 UI_OFFSET_REGEX = r"^(?:o|offset)\ ?(?P<sign>[/+-])?(?P<time>\d{1,9}(?:[^\d\.](?:\d{1,9})){0,2}(?:\.(?:\d{1,3}))?)$"
 UI_SEEK_REGEX = r"^(?:s|seek)?\ ?(?P<sign>[+-])?(?P<time>\d{1,4}(?:[^\d\.](?:\d{1,6})){0,2}(?:\.(?:\d{1,3}))?)$"
 PARSE_TIME_REGEX = r'(:?(?:(?P<hours>\d+?)[^\d\.])?(?:(?P<minutes>\d+?))?[^\d\.])?(?P<seconds>\d+?)(?:\.(?P<miliseconds>\d+?))?$'
+MESSAGE_WITH_USERNAME_REGEX = "^(<(?P<username>[^<>]+)>)(?P<message>.*)"
 SERVER_MAX_TEMPLATE_LENGTH = 10000
 PRIVACY_SENDRAW_MODE = "SendRaw"
 PRIVACY_SENDHASHED_MODE = "SendHashed"

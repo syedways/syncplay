@@ -142,7 +142,7 @@ de = {
     "invalid-offset-value" : u"Ungültiger Offset-Wert",
 
     "switch-file-not-found-error" : u"Konnte nicht zur Datei '{0}' wechseln. Syncplay looks in the specified media directories.", # File not found, folder it was not found in # TODO: Re-translate "Syncplay sucht im Ordner der aktuellen Datei und angegebenen Medien-Verzeichnissen." to reference to checking in "current media directory"
-    "folder-search-timeout-error" : u"The search for media in media directories was aborted as it took too long to search through '{}'. This will occur if you select a folder with too many sub-folders in your list of media folders to search through. For automatic file switching to work again please select File->Set Media Directories in the menu bar and remove this directory or replace it with an appropriate sub-folder.", #Folder # TODO: Translate
+    "folder-search-timeout-error" : u"The search for media in media directories was aborted as it took too long to search through '{}'. This will occur if you select a folder with too many sub-folders in your list of media folders to search through. For automatic file switching to work again please select File->Set Media Directories in the menu bar and remove this directory or replace it with an appropriate sub-folder. If the folder is actually fine then you can re-enable it by selecting File->Set Media Directories and pressing 'OK'.", #Folder # TODO: Translate
     "folder-search-first-file-timeout-error" : u"The search for media in '{}' was aborted as it took too long to access the directory. This could happen if it is a network drive or if you configure your drive to spin down after a period of inactivity. For automatic file switching to work again please go to File->Set Media Directories and either remove the directory or resolve the issue (e.g. by changing power saving settings).", #Folder # TODO: Translate
     "added-file-not-in-media-directory-error" : u"You loaded a file in '{}' which is not a known media directory. You can add this as a media directory by selecting File->Set Media Directories in the menu bar.", #Folder # TODO: Translate
     "no-media-directories-error" : u"No media directories have been set. For shared playlist and file switching features to work properly please select File->Set Media Directories and specify where Syncplay should look to find media files.", # TODO: Translate
@@ -197,7 +197,9 @@ de = {
     "checkforupdatesautomatically-label" : u"Automatisch nach Updates suchen",
     "slowondesync-label" : u"Verlangsamen wenn nicht synchron (nicht unterstützt mit MPC-HC)",
     "dontslowdownwithme-label" : u"Nie verlangsamen oder andere zurückspulen (Experimentell)",
+    "pausing-title" : u"Pausing", # TODO: Translate
     "pauseonleave-label" : u"Pausieren wenn ein Benutzer austritt",
+    "readiness-title" : u"Initial readiness state", # TODO: Translate
     "readyatstart-label" : u"Standardmäßig auf \'Bereit\' stellen",
     "forceguiprompt-label" : u"Diesen Dialog nicht mehr anzeigen",
     "showosd-label" : u"OSD-Nachrichten anzeigen",
@@ -273,6 +275,7 @@ de = {
     "createcontrolledroom-menu-label" : u"&Zentral gesteuerten Raum erstellen",
     "identifyascontroller-menu-label" : u"Als Raumleiter &identifizieren",
     "settrusteddomains-menu-label" : u"Set &trusted domains", # TODO: Translate
+    "addtrusteddomain-menu-label" : u"Add {} as trusted domain", # Domain # TODO: Translate
 
     "playback-menu-label" : u"&Wiedergabe",
 
@@ -289,6 +292,7 @@ de = {
     "addfolder-label" : u"Add folder", # TODO: Translate
 
     "adduris-msgbox-label" : u"Add URLs to playlist (one per line)", # TODO: Translate
+    "editplaylist-msgbox-label": u"Set playlist (one per line)",  # TODO: Translate
     "trusteddomains-msgbox-label" : u"Domains it is okay to automatically switch to (one per line)", # TODO: Translate
 
     "createcontrolledroom-msgbox-label" : u"Zentral gesteuerten Raum erstellen",
@@ -397,13 +401,14 @@ de = {
     "playlist-contents-changed-notification" : u"{} updated the playlist", # Username
     "cannot-find-file-for-playlist-switch-error" : u"Could not find file {} in media directories for playlist switch!", # Filename
     "cannot-add-duplicate-error" : u"Could not add second entry for '{}' to the playlist as no duplicates are allowed.", #Filename
-    "cannot-add-unsafe-path-error" : u"Could not automatically load {} because it is not on a trusted domain. You can switch to the URL manually by double clicking it in the playlist, and add trusted domains via File->Advanced->Set Trusted Domains.", # Filename
+    "cannot-add-unsafe-path-error" : u"Could not automatically load {} because it is not on a trusted domain. You can switch to the URL manually by double clicking it in the playlist, and add trusted domains via File->Advanced->Set Trusted Domains. If you right click on a URL then you can add its domain as a trusted domain via the context menu.", # Filename
     "sharedplaylistenabled-label" : u"Enable shared playlists",
     "removefromplaylist-menu-label" : u"Remove from playlist",
     "shuffleplaylist-menuu-label" : u"Shuffle playlist",
     "undoplaylist-menu-label" : u"Undo last change to playlist",
     "addfilestoplaylist-menu-label" : u"Add file(s) to bottom of playlist",
     "addurlstoplaylist-menu-label" : u"Add URL(s) to bottom of playlist",
+    "editplaylist-menu-label": u"Edit playlist",
 
     "addusersfiletoplaylist-menu-label" : u"Add {} file to playlist", # item owner indicator
     "addusersstreamstoplaylist-menu-label" : u"Add {} stream to playlist", # item owner indicator

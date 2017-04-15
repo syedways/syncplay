@@ -542,6 +542,9 @@ class ConfigDialog(QtGui.QDialog):
         self.defaultroomLabel.setObjectName("room")
         self.defaultroomTextbox.setObjectName("room")
 
+        self.usernameTextbox.setMaxLength(constants.MAX_USERNAME_LENGTH)
+        self.defaultroomTextbox.setMaxLength(constants.MAX_ROOM_NAME_LENGTH)
+
         self.connectionSettingsLayout = QtGui.QGridLayout()
         self.connectionSettingsLayout.addWidget(self.hostLabel, 0, 0)
         self.connectionSettingsLayout.addWidget(self.hostCombobox, 0, 1)
@@ -628,7 +631,7 @@ class ConfigDialog(QtGui.QDialog):
 
         # Initial state
 
-        self.readyInitialGroup = QtGui.QGroupBox(u"Initial readiness state")
+        self.readyInitialGroup = QtGui.QGroupBox(getMessage("readiness-title"))
         self.readyInitialLayout = QtGui.QVBoxLayout()
         self.readyInitialGroup.setLayout(self.readyInitialLayout)
         self.readyatstartCheckbox = QCheckBox(getMessage("readyatstart-label"))
@@ -637,7 +640,7 @@ class ConfigDialog(QtGui.QDialog):
         self.readyLayout.addWidget(self.readyInitialGroup)
 
         # Automatically pausing
-        self.readyPauseGroup = QtGui.QGroupBox(u"Pausing")
+        self.readyPauseGroup = QtGui.QGroupBox(getMessage("pausing-title"))
         self.readyPauseLayout = QtGui.QVBoxLayout()
         self.readyPauseGroup.setLayout(self.readyPauseLayout)
         self.pauseonleaveCheckbox = QCheckBox(getMessage("pauseonleave-label"))
@@ -974,7 +977,7 @@ class ConfigDialog(QtGui.QDialog):
 
     def ensureTabListIsVisible(self):
         self.stackedFrame.setFixedWidth(self.stackedFrame.width())
-        while self.tabListWidget.horizontalScrollBar().isVisible() and self.tabListFrame.width() < 200:
+        while self.tabListWidget.horizontalScrollBar().isVisible() and self.tabListFrame.width() < constants.MAXIMUM_TAB_WIDTH:
             self.tabListFrame.setFixedWidth(self.tabListFrame.width()+1)
 
     def tabChange(self):
@@ -1093,7 +1096,10 @@ class ConfigDialog(QtGui.QDialog):
         self.showmoreCheckbox.toggled.connect(self.moreToggled)
 
         self.setLayout(self.mainLayout)
-        self.runButton.setFocus()
+        if self.config['noStore']:
+            self.runButton.setFocus()
+        else:
+            self.storeAndRunButton.setFocus()
         self.setFixedSize(self.sizeHint())
         self.setAcceptDrops(True)
 

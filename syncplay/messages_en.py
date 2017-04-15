@@ -93,7 +93,6 @@ en = {
     "language-changed-msgbox-label" : "Language will be changed when you run Syncplay.",
     "promptforupdate-label" : u"Is it okay for Syncplay to automatically check for updates from time to time?",
 
-    "vlc-version-mismatch": u"This version of VLC does not support Syncplay. VLC {}+ supports Syncplay but VLC 3 does not. Please use an alternative media player.", # VLC min version
     "vlc-interface-version-mismatch": "You are running version {} of the Syncplay interface module for VLC, but Syncplay is designed to run with version {} and above.  Please refer to the Syncplay User Guide at http://syncplay.pl/guide/ for instructions on how to install syncplay.lua.",  # VLC interface version, VLC interface min version
     "vlc-interface-oldversion-warning": "Warning: Syncplay detected that an old version version of the Syncplay interface module for VLC was installed in the VLC directory. Please refer to the Syncplay User Guide at http://syncplay.pl/guide/ for instructions on how to install syncplay.lua.",
     "vlc-interface-not-installed": "Warning: The Syncplay interface module for VLC was not found in the VLC directory. As such, if you are running VLC 2.0 then VLC will use the syncplay.lua module contained within the Syncplay directory, but this will mean that other custom interface scripts and extensions will not work. Please refer to the Syncplay User Guide at http://syncplay.pl/guide/ for instructions on how to install syncplay.lua.",
@@ -129,10 +128,9 @@ en = {
     "not-json-error" : "Not a json encoded string\n",
     "hello-arguments-error" : "Not enough Hello arguments\n",
     "version-mismatch-error" : "Mismatch between versions of client and server\n",
-    "vlc-failed-connection": "Failed to connect to VLC. If you have not installed syncplay.lua then please refer to http://syncplay.pl/LUA/ for instructions.",
+    "vlc-failed-connection": "Failed to connect to VLC. If you have not installed syncplay.lua and are using the latest verion of VLC then please refer to http://syncplay.pl/LUA/ for instructions.",
     "vlc-failed-noscript": "VLC has reported that the syncplay.lua interface script has not been installed. Please refer to http://syncplay.pl/LUA/ for instructions.",
-    "vlc-failed-versioncheck": "This version of VLC is not supported by Syncplay. Please use VLC 2.",
-    "vlc-failed-other" : "When trying to load the syncplay.lua interface script VLC has provided the following error: {}",  # Syncplay Error
+    "vlc-failed-versioncheck": "This version of VLC is not supported by Syncplay.",
 
     "not-supported-by-server-error" : "This feature is not supported by the server. The feature requires a server running Syncplay {}+, but the server is running Syncplay {}.", #minVersion, serverVersion
     "shared-playlists-not-supported-by-server-error" : "The shared playlists feature may not be supported by the server. To ensure that it works correctly requires a server running Syncplay  {}+, but the server is running Syncplay {}.", #minVersion, serverVersion
@@ -142,7 +140,7 @@ en = {
     "invalid-offset-value" : u"Invalid offset value",
 
     "switch-file-not-found-error" : u"Could not switch to file '{0}'. Syncplay looks in specified media directories.", # File not found
-    "folder-search-timeout-error" : u"The search for media in media directories was aborted as it took too long to search through '{}'. This will occur if you select a folder with too many sub-folders in your list of media folders to search through. For automatic file switching to work again please select File->Set Media Directories in the menu bar and remove this directory or replace it with an appropriate sub-folder.", #Folder
+    "folder-search-timeout-error" : u"The search for media in media directories was aborted as it took too long to search through '{}'. This will occur if you select a folder with too many sub-folders in your list of media folders to search through. For automatic file switching to work again please select File->Set Media Directories in the menu bar and remove this directory or replace it with an appropriate sub-folder. If the folder is actually fine then you can re-enable it by selecting File->Set Media Directories and pressing 'OK'.", #Folder
     "folder-search-first-file-timeout-error" : u"The search for media in '{}' was aborted as it took too long to access the directory. This could happen if it is a network drive or if you configure your drive to spin down after a period of inactivity. For automatic file switching to work again please go to File->Set Media Directories and either remove the directory or resolve the issue (e.g. by changing power saving settings).", #Folder
     "added-file-not-in-media-directory-error" : u"You loaded a file in '{}' which is not a known media directory. You can add this as a media directory by selecting File->Set Media Directories in the menu bar.", #Folder
     "no-media-directories-error" : u"No media directories have been set. For shared playlist and file switching features to work properly please select File->Set Media Directories and specify where Syncplay should look to find media files.",
@@ -199,7 +197,9 @@ en = {
     "rewindondesync-label" : "Rewind on major desync (recommended)",
     "fastforwardondesync-label" : "Fast-forward if lagging behind (recommended)",
     "dontslowdownwithme-label" : "Never slow down or rewind others (experimental)",
+    "pausing-title" : u"Pausing",
     "pauseonleave-label" : "Pause when user leaves (e.g. if they are disconnected)",
+    "readiness-title" : u"Initial readiness state",
     "readyatstart-label" : "Set me as 'ready to watch' by default",
     "forceguiprompt-label" : "Don't always show the Syncplay configuration window", # (Inverted)
     "showosd-label" : "Enable OSD Messages",
@@ -275,6 +275,7 @@ en = {
     "createcontrolledroom-menu-label" : "&Create managed room",
     "identifyascontroller-menu-label" : "&Identify as room operator",
     "settrusteddomains-menu-label" : u"Set &trusted domains",
+    "addtrusteddomain-menu-label" : u"Add {} as trusted domain", # Domain
 
     "playback-menu-label" : u"&Playback",
 
@@ -291,6 +292,7 @@ en = {
     "addfolder-label" : u"Add folder",
 
     "adduris-msgbox-label" : u"Add URLs to playlist (one per line)",
+    "editplaylist-msgbox-label" : u"Set playlist (one per line)",
     "trusteddomains-msgbox-label" : u"Domains it is okay to automatically switch to (one per line)",
 
     "createcontrolledroom-msgbox-label" : "Create managed room",
@@ -341,7 +343,7 @@ en = {
     "unpause-always-tooltip" : u"If you press unpause it always sets you as ready and unpause, rather than just setting you as ready.",
     "unpause-ifalreadyready-tooltip" : u"If you press unpause when not ready it will set you as ready - press unpause again to unpause.",
     "unpause-ifothersready-tooltip" : u"If you press unpause when not ready, it will only upause if others are ready.",
-    "unpause-ifminusersready-tooltip" : u"If you press unpause when not ready, it will only upause if others are ready and minimum users threshold is met.",
+    "unpause-ifminusersready-tooltip" : u"If you press unpause when not ready, it will only unpause if others are ready and minimum users threshold is met.",
     "trusteddomains-arguments-tooltip" : u"Domains that it is okay for Syncplay to automatically switch to when shared playlists is enabled.",
 
     "help-tooltip" : "Opens the Syncplay.pl user guide.",
@@ -398,14 +400,16 @@ en = {
     "playlist-contents-changed-notification" : u"{} updated the playlist", # Username
     "cannot-find-file-for-playlist-switch-error" : u"Could not find file {} in media directories for playlist switch!", # Filename
     "cannot-add-duplicate-error" : u"Could not add second entry for '{}' to the playlist as no duplicates are allowed.", #Filename
-    "cannot-add-unsafe-path-error" : u"Could not automatically load {} because it is not on a trusted domain. You can switch to the URL manually by double clicking it in the playlist, and add trusted domains via File->Advanced->Set Trusted Domains.", # Filename
+    "cannot-add-unsafe-path-error" : u"Could not automatically load {} because it is not on a trusted domain. You can switch to the URL manually by double clicking it in the playlist, and add trusted domains via File->Advanced->Set Trusted Domains. If you right click on a URL then you can add its domain as a trusted domain via the context menu.", # Filename
     "sharedplaylistenabled-label" : u"Enable shared playlists",
     "removefromplaylist-menu-label" : u"Remove from playlist",
     "shuffleplaylist-menuu-label" : u"Shuffle playlist",
     "undoplaylist-menu-label" : u"Undo last change to playlist",
     "addfilestoplaylist-menu-label" : u"Add file(s) to bottom of playlist",
     "addurlstoplaylist-menu-label" : u"Add URL(s) to bottom of playlist",
+    "editplaylist-menu-label": u"Edit playlist",
 
+    "open-containing-folder": u"Open folder containing this file",
     "addusersfiletoplaylist-menu-label" : u"Add {} file to playlist", # item owner indicator
     "addusersstreamstoplaylist-menu-label" : u"Add {} stream to playlist", # item owner indicator
     "openusersstream-menu-label" : u"Open {} stream", # [username]'s

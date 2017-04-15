@@ -7,7 +7,7 @@ from syncplay.utils import isURL
 import os, sys, time
 
 class MpvPlayer(MplayerPlayer):
-    RE_VERSION = re.compile('.*mpv (\d)\.(\d)\.\d.*')
+    RE_VERSION = re.compile('.*mpv (\d+)\.(\d+)\.\d+.*')
     osdMessageSeparator = "\\n"
 
     @staticmethod
@@ -110,28 +110,36 @@ class NewMpvPlayer(OldMpvPlayer):
     lastMPVPositionUpdate = None
 
     def setPaused(self, value):
-        if self._paused <> value:
-            self._paused = not self._paused
-            self._listener.sendLine('cycle pause')
-            if value == False:
-                self.lastMPVPositionUpdate = time.time()
+        if self._paused == value:
+            self._client.ui.showDebugMessage("Not sending setPaused to mpv as state is already {}".format(value))
+            return
+        pauseValue = "yes" if value else "no"
+        self._setProperty("pause", pauseValue)
+        self._paused = value
+        if value == False:
+            self.lastMPVPositionUpdate = time.time()
 
     def _getProperty(self, property_):
-        floatProperties = ['length','time-pos']
+        floatProperties = ['time-pos']
         if property_ in floatProperties:
             propertyID = u"={}".format(property_)
+        elif property_ == 'length':
+            propertyID = u'=length:${=duration:0}'
         else:
             propertyID = property_
         self._listener.sendLine(u"print_text ""ANS_{}=${{{}}}""".format(property_, propertyID))
 
     def getCalculatedPosition(self):
         if self.fileLoaded == False:
+            self._client.ui.showDebugMessage("File not loaded so using GlobalPosition for getCalculatedPosition({})".format(self._client.getGlobalPosition()))
             return self._client.getGlobalPosition()
 
         if self.lastMPVPositionUpdate is None:
+            self._client.ui.showDebugMessage("MPV not updated position so using GlobalPosition for getCalculatedPosition ({})".format(self._client.getGlobalPosition()))
             return self._client.getGlobalPosition()
 
-        if self._recentlyReset:
+        if self._recentlyReset():
+            self._client.ui.showDebugMessage("Recently reset so using self.position for getCalculatedPosition ({})".format(self._position))
             return self._position
 
         diff = time.time() - self.lastMPVPositionUpdate
@@ -148,10 +156,12 @@ class NewMpvPlayer(OldMpvPlayer):
     def _storePosition(self, value):
         self.lastMPVPositionUpdate = time.time()
         if self._recentlyReset():
+            self._client.ui.showDebugMessage("Recently reset, so storing position as 0")
             self._position = 0
-        elif self._fileIsLoaded():
+        elif self._fileIsLoaded() or (value < constants.MPV_NEWFILE_IGNORE_TIME and self._fileIsLoaded(ignoreDelay=True)):
             self._position = max(value,0)
         else:
+            self._client.ui.showDebugMessage("No file loaded so storing position as GlobalPosition ({})".format(self._client.getGlobalPosition()))
             self._position = self._client.getGlobalPosition()
 
     def _storePauseState(self, value):
@@ -190,17 +200,23 @@ class NewMpvPlayer(OldMpvPlayer):
         self._listener.sendLine(u'loadfile {}'.format(self._quoteArg(filePath)), notReadyAfterThis=True)
 
     def setPosition(self, value):
+        if value < constants.DO_NOT_RESET_POSITION_THRESHOLD and self._recentlyReset():
+            self._client.ui.showDebugMessage("Did not seek as recently reset and {} below 'do not reset position' threshold".format(value))
+            return
         super(self.__class__, self).setPosition(value)
         self.lastMPVPositionUpdate = time.time()
 
     def openFile(self, filePath, resetPosition=False):
+        self._client.ui.showDebugMessage("openFile, resetPosition=={}".format(resetPosition))
         if resetPosition:
             self.lastResetTime = time.time()
             if isURL(filePath):
                 self.lastResetTime += constants.STREAM_ADDITIONAL_IGNORE_TIME
         self._loadFile(filePath)
         if self._paused != self._client.getGlobalPaused():
-            self.setPaused(self._client.getGlobalPaused())
+            self._client.ui.showDebugMessage("Want to set paused to {}".format(self._client.getGlobalPaused()))
+        else:
+            self._client.ui.showDebugMessage("Don't want to set paused to {}".format(self._client.getGlobalPaused()))
         if resetPosition == False:
             self.setPosition(self._client.getGlobalPosition())
         else:
@@ -237,7 +253,11 @@ class NewMpvPlayer(OldMpvPlayer):
         if self._paused != self._client.getGlobalPaused():
             self.reactor.callFromThread(self._client.getGlobalPaused)
 
-    def _fileIsLoaded(self):
+    def _fileIsLoaded(self, ignoreDelay=False):
+        if ignoreDelay:
+            self._client.ui.showDebugMessage("Ignoring _fileIsLoaded MPV_NEWFILE delay")
+            return True if self.fileLoaded else False
+
         if self.fileLoaded == True and self.lastLoadedTime != None and time.time() > (self.lastLoadedTime + constants.MPV_NEWFILE_IGNORE_TIME):
             return True
         else:
