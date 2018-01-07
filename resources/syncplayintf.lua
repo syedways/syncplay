@@ -35,7 +35,7 @@ local assdraw = require "mp.assdraw"
 local opt = require 'mp.options'
 
 function format_scrolling(xpos, ypos, text)
-	local chat_message = "\n"..chat_format .. "{\\pos("..xpos..","..ypos..")}"..text.."\\N\\n"
+	local chat_message = "\n"..chat_format .. "{\\pos("..xpos..","..ypos..")\\q2}"..text.."\\N\\n"
     return string.format(chat_message)
 end
 
@@ -95,7 +95,7 @@ function chat_update()
     local incrementRow = 0
     if opts['chatOutputMode'] == CHAT_MODE_CHATROOM and chat_log ~= {} then
         local timedelta = mp.get_time() - last_chat_time
-		if timedelta >= opts['chatTimeout'] then
+		if timedelta >= opts['chatTimeout'] and not repl_active then
             clear_chat()
         end
     end
@@ -325,7 +325,7 @@ opts = {
 	['chatInputFontUnderline'] = false,
 	['chatInputFontColor'] = "#000000",
 	['chatInputPosition'] = "Top",
-	['MaxChatMessageLength'] = 50,
+	['MaxChatMessageLength'] = 500,
 	['chatOutputFontFamily'] = "sans serif",
 	['chatOutputFontSize'] = 50,
 	['chatOutputFontWeight'] = 1,
@@ -423,8 +423,8 @@ function input_ass()
 	local after_style = '{\\u'  .. underline .. '}'
 	local cheight = opts['chatInputFontSize'] * 8
 	local cglyph = '_'
-	local before_cur = ass_escape(line:sub(1, cursor - 1))
-	local after_cur = ass_escape(line:sub(cursor))
+	local before_cur = wordwrapify_string(ass_escape(line:sub(1, cursor - 1)))
+	local after_cur = wordwrapify_string(ass_escape(line:sub(cursor)))
     local secondary_pos = "10,"..tostring(10+opts['chatInputFontSize'])
 
 	local alignment = 7

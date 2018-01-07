@@ -66,8 +66,8 @@ DEFAULT_CHAT_OUTPUT_FONT_COLOR = "#FFFF00"
 DEFAULT_CHAT_FONT_WEIGHT = 1
 
 # Maximum character lengths (for client and server)
-MAX_CHAT_MESSAGE_LENGTH = 50 # Number of displayed characters
-MAX_USERNAME_LENGTH = 16 # Number of displayed characters
+MAX_CHAT_MESSAGE_LENGTH = 125 # Number of displayed characters
+MAX_USERNAME_LENGTH = 20 # Number of displayed characters
 MAX_ROOM_NAME_LENGTH = 35 # Number of displayed characters
 MAX_FILENAME_LENGTH = 250 # Number of displayed characters
 
