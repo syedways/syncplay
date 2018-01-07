@@ -185,7 +185,7 @@ USERLIST_GUI_FILENAME_COLUMN = 3
 MPLAYER_SLAVE_ARGS = ['-slave', '--hr-seek=always', '-nomsgcolor', '-msglevel', 'all=1:global=4:cplayer=4', '-af-add', 'scaletempo']
 MPV_ARGS = ['--force-window', '--idle', '--hr-seek=always', '--keep-open']
 MPV_SLAVE_ARGS = ['--msg-level=all=error,cplayer=info,term-msg=info', '--input-terminal=no', '--input-file=/dev/stdin']
-MPV_SLAVE_ARGS_NEW = ['--term-playing-msg=<SyncplayUpdateFile>\nANS_filename=${filename}\nANS_length=${=length:${=duration:0}}\nANS_path=${path}\n</SyncplayUpdateFile>', '--terminal=yes']
+MPV_SLAVE_ARGS_NEW = ['--term-playing-msg=<SyncplayUpdateFile>\nANS_filename=${filename}\nANS_length=${=duration:${=length:0}}\nANS_path=${path}\n</SyncplayUpdateFile>', '--terminal=yes']
 MPV_NEW_VERSION = False
 MPV_OSC_VISIBILITY_CHANGE_VERSION = False
 MPV_INPUT_PROMPT_START_CHARACTER = u"〉"
