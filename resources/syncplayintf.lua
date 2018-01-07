@@ -569,11 +569,12 @@ function trim_string(line,maxCharacters)
 end
 
 function wordwrapify_string(line)
--- Naive helper function to find the next UTF-8 character in 'str' after 'pos'
--- by skipping continuation bytes. Assumes 'str' contains valid UTF-8.
+-- Used to ensure characters wrap on a per-character rather than per-word basis
+-- to avoid issues with long filenames, etc.
+
 	local str = line
 	if str == nil or str == "" then
-		return str, ""
+		return ""
     end
     local newstr = ""
 	local currentChar = 0
@@ -587,7 +588,7 @@ function wordwrapify_string(line)
             return newstr
 		end
 		charToTest = str:sub(currentChar,nextChar-1)
-		if charToTest ~= "\\" and charToTest ~= "{"  and charToTest ~= "}" then
+		if charToTest ~= "\\" and charToTest ~= "{"  and charToTest ~= "}" and charToTest ~= "%" then
 			newstr = newstr .. WORDWRAPIFY_MAGICWORD .. str:sub(currentChar,nextChar-1)
         else
 			newstr = newstr .. str:sub(currentChar,nextChar-1)
