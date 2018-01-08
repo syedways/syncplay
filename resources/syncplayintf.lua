@@ -888,7 +888,6 @@ function add_specialalphabindings(charinput)
 	end
 end
 
-
 add_alpharowbinding('a','z')
 add_alpharowbinding('A','Z')
 add_alpharowbinding('/','/')
@@ -906,6 +905,7 @@ add_alpharowbinding('#','#')
 add_alpharowbinding('~','~')
 add_alpharowbinding('\'','\'')
 add_alpharowbinding('@','@')
+
 add_specialalphabindings({'à','è','ì','ò','ù','À','È','Ì','Ò','Ù'})
 add_specialalphabindings({'á', 'é', 'í', 'ó', 'ú', 'ý', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ý'})
 add_specialalphabindings({'â', 'ê', 'î', 'ô', 'û', 'Â', 'Ê', 'Î', 'Ô', 'Û'})
@@ -916,6 +916,11 @@ add_specialalphabindings({'¤','†','×','÷','‡','±','—','–','¶','§',
 add_specialalphabindings({'ž','Ž'})
 add_specialalphabindings({'ª','Þ','þ','ƒ','µ','°','º','•','„','“','…','¬','¥','£','€','¢','¹','²','³','½','¼','¾'})
 add_specialalphabindings({'·','Ĉ','ĉ','Ĝ','ĝ','Ĥ','ĥ','Ĵ','ĵ','Ŝ','ŝ','Ŭ','ŭ'})
+add_specialalphabindings({'Б','б','В','в','Г','г','Д','д','Е','е','Ё','ё','Ж','ж','З','з'})
+add_specialalphabindings({'И','и','Й','й','К','к','Л','л','М','м','Н','н','О','о','П','п'})
+add_specialalphabindings({'Р','р','С','с','Т','т','У','у','Ф','ф','Х','х','Ц','ц','Ч','ч'})
+add_specialalphabindings({'Ш','ш','Щ','щ','Ъ','ъ','Ы','ы','Ь','ь','Э','э','Ю','ю','Я','я'})
+add_specialalphabindings({'≥','≠'})
 
 add_repl_bindings(bindings)
 
