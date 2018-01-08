@@ -84,7 +84,7 @@ class ConfigurationGetter(object):
                         "chatLeftMargin": 20,
                         "chatBottomMargin": 30,
                         "chatMoveOSD": True,
-                        "chatOSDMargin": 60,
+                        "chatOSDMargin": 110,
                         "notificationTimeout": 3,
                         "alertTimeout": 5,
                         "chatTimeout": 7,
