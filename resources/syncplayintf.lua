@@ -425,7 +425,7 @@ function input_ass()
 	local cglyph = '_'
 	local before_cur = wordwrapify_string(ass_escape(line:sub(1, cursor - 1)))
 	local after_cur = wordwrapify_string(ass_escape(line:sub(cursor)))
-    local secondary_pos = "10,"..tostring(10+opts['chatInputFontSize'])
+        local secondary_pos = "10,"..tostring(10+opts['chatInputFontSize'])
 
 	local alignment = 7
 	local position = "5,5"
@@ -626,6 +626,7 @@ end
 
 -- Insert a character at the current cursor position (' '-'~', Shift+Enter)
 function handle_char_input(c)
+    if c == nil then return end
 	if key_hints_enabled and (string.len(line) > 0 or opts['chatDirectInput'] == false) then
         key_hints_enabled = false
     end
@@ -635,7 +636,7 @@ function handle_char_input(c)
 	else
 		line = line:sub(1, cursor - 1) .. c .. line:sub(cursor)
 	end
-	cursor = cursor + 1
+	cursor = cursor + c:len()
     trim_input()
 	update()
 end
@@ -880,6 +881,14 @@ function add_alpharowbinding(firstchar,lastchar)
     end
 end
 
+function add_specialalphabindings(charinput)
+    local alphabindingarray = charinput
+	for i, alphabinding in ipairs(alphabindingarray) do
+    	alpharowbindings[#alpharowbindings + 1] = {alphabinding, function() handle_char_input(alphabinding) end }
+	end
+end
+
+
 add_alpharowbinding('a','z')
 add_alpharowbinding('A','Z')
 add_alpharowbinding('/','/')
@@ -897,6 +906,16 @@ add_alpharowbinding('#','#')
 add_alpharowbinding('~','~')
 add_alpharowbinding('\'','\'')
 add_alpharowbinding('@','@')
+add_specialalphabindings({'à','è','ì','ò','ù','À','È','Ì','Ò','Ù'})
+add_specialalphabindings({'á', 'é', 'í', 'ó', 'ú', 'ý', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ý'})
+add_specialalphabindings({'â', 'ê', 'î', 'ô', 'û', 'Â', 'Ê', 'Î', 'Ô', 'Û'})
+add_specialalphabindings({'ã', 'ñ', 'õ', 'Ã', 'Ñ', 'Õ'})
+add_specialalphabindings({'ä', 'ë', 'ï', 'ö', 'ü', 'ÿ', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'Ÿ'})
+add_specialalphabindings({'å', 'Å','æ','Æ','œ','Œ','ç','Ç','ð','Ð','ø','Ø','¿','¡','ß'})
+add_specialalphabindings({'¤','†','×','÷','‡','±','—','–','¶','§','ˆ','˜','«','»','¦','‰','©','®','™'})
+add_specialalphabindings({'ž','Ž'})
+add_specialalphabindings({'ª','Þ','þ','ƒ','µ','°','º','•','„','“','…','¬','¥','£','€','¢','¹','²','³','½','¼','¾'})
+add_specialalphabindings({'·','Ĉ','ĉ','Ĝ','ĝ','Ĥ','ĥ','Ĵ','ĵ','Ŝ','ŝ','Ŭ','ŭ'})
 
 add_repl_bindings(bindings)
 
