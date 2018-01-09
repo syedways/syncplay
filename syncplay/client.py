@@ -1850,7 +1850,7 @@ class FileSwitchManager(object):
                     if os.path.isfile(filepath):
                         return filepath
 
-        if highPriority and self.folderSearchEnabled:
+        if highPriority and self.folderSearchEnabled and self.mediaDirectories is not None:
             directoryList = self.mediaDirectories
             # Spin up hard drives to prevent premature timeout
             randomFilename = u"RandomFile"+unicode(random.randrange(10000, 99999))+u".txt"
