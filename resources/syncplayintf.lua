@@ -627,6 +627,7 @@ end
 -- Insert a character at the current cursor position (' '-'~', Shift+Enter)
 function handle_char_input(c)
     if c == nil then return end
+    if c == "\\" then c = opts['backslashSubstituteCharacter'] end
 	if key_hints_enabled and (string.len(line) > 0 or opts['chatDirectInput'] == false) then
         key_hints_enabled = false
     end
