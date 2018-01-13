@@ -546,8 +546,13 @@ class SyncplayClient(object):
             "sharedPlaylists": utils.meetsMinVersion(self.serverVersion, constants.SHARED_PLAYLIST_MIN_VERSION),
             "chat": utils.meetsMinVersion(self.serverVersion, constants.CHAT_MIN_VERSION),
             "readiness": utils.meetsMinVersion(self.serverVersion, constants.USER_READY_MIN_VERSION),
-            "managedRooms": utils.meetsMinVersion(self.serverVersion, constants.CONTROLLED_ROOMS_MIN_VERSION)
+            "managedRooms": utils.meetsMinVersion(self.serverVersion, constants.CONTROLLED_ROOMS_MIN_VERSION),
+            "maxChatMessageLength": constants.FALLBACK_MAX_CHAT_MESSAGE_LENGTH,
+            "maxUsernameLength": constants.FALLBACK_MAX_USERNAME_LENGTH,
+            "maxRoomNameLength": constants.FALLBACK_MAX_ROOM_NAME_LENGTH,
+            "maxFilenameLength": constants.FALLBACK_MAX_FILENAME_LENGTH
         }
+
         if featureList:
             self.serverFeatures.update(featureList)
         if not utils.meetsMinVersion(self.serverVersion, constants.SHARED_PLAYLIST_MIN_VERSION):
@@ -555,7 +560,18 @@ class SyncplayClient(object):
         elif not self.serverFeatures["sharedPlaylists"]:
             self.ui.showErrorMessage(getMessage("shared-playlists-disabled-by-server-error"))
         # TODO: Have messages for all unsupported & disabled features
+        constants.MAX_CHAT_MESSAGE_LENGTH = self.serverFeatures["maxChatMessageLength"]
+        constants.MAX_USERNAME_LENGTH = self.serverFeatures["maxUsernameLength"]
+        constants.MAX_ROOM_NAME_LENGTH = self.serverFeatures["maxRoomNameLength"]
+        constants.MAX_FILENAME_LENGTH = self.serverFeatures["maxFilenameLength"]
+        constants.MPV_SYNCPLAYINTF_CONSTANTS_TO_SEND = ["MaxChatMessageLength={}".format(constants.MAX_CHAT_MESSAGE_LENGTH),
+                                              u"inputPromptStartCharacter={}".format(constants.MPV_INPUT_PROMPT_START_CHARACTER),
+                                              u"inputPromptEndCharacter={}".format(constants.MPV_INPUT_PROMPT_END_CHARACTER),
+                                              u"backslashSubstituteCharacter={}".format(
+                                                  constants.MPV_INPUT_BACKSLASH_SUBSTITUTE_CHARACTER)]
         self.ui.setFeatures(self.serverFeatures)
+        if self._player:
+            self._player.setFeatures(self.serverFeatures)
 
     def getSanitizedCurrentUserFile(self):
         if self.userlist.currentUser.file:

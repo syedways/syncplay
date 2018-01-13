@@ -930,7 +930,28 @@ mp.register_script_message('type', function(text)
 	show_and_type(text)
 end)
 
+local syncplayintfSet = false
 mp.command('print-text "<get_syncplayintf_options>"')
+
+function readyMpvAfterSettingsKnown()
+	if syncplayintfSet == false then
+		local vertical_output_area = CANVAS_HEIGHT-(opts['chatTopMargin']+opts['chatBottomMargin']+(opts['chatOutputFontSize']*opts['scrollingFirstRowOffset'])+SCROLLING_ADDITIONAL_BOTTOM_MARGIN)
+		max_scrolling_rows = math.floor(vertical_output_area/opts['chatOutputFontSize'])
+		local user_opts = { visibility = "auto", }
+		opt.read_options(user_opts, "osc")
+		default_oscvisibility_state = user_opts.visibility
+		if opts['chatInputEnabled'] == true then
+			key_hints_enabled = true
+			mp.add_forced_key_binding('enter', handle_enter)
+			mp.add_forced_key_binding('kp_enter', handle_enter)
+			if opts['chatDirectInput'] == true then
+				add_repl_alpharow_bindings(alpharowbindings)
+				mp.add_forced_key_binding('tab', handle_tab)
+			end
+        end
+        syncplayintfSet = true
+    end
+end
 
 function set_syncplayintf_options(input)
 	--mp.command('print-text "<chat>...'..input..'</chat>"')
@@ -947,20 +968,7 @@ function set_syncplayintf_options(input)
 		end
 		opts[option] = value
 		--mp.command('print-text "<chat>'..option.."="..tostring(value).." - "..valueType..'</chat>"')
-    end
-    chat_format = get_output_style()
-    local vertical_output_area = CANVAS_HEIGHT-(opts['chatTopMargin']+opts['chatBottomMargin']+(opts['chatOutputFontSize']*opts['scrollingFirstRowOffset'])+SCROLLING_ADDITIONAL_BOTTOM_MARGIN)
-    max_scrolling_rows = math.floor(vertical_output_area/opts['chatOutputFontSize'])
-    local user_opts = { visibility = "auto", }
-    opt.read_options(user_opts, "osc")
-    default_oscvisibility_state = user_opts.visibility
-	if opts['chatInputEnabled'] == true then
-        key_hints_enabled = true
-		mp.add_forced_key_binding('enter', handle_enter)
-		mp.add_forced_key_binding('kp_enter', handle_enter)
-        if opts['chatDirectInput'] == true then
-        	add_repl_alpharow_bindings(alpharowbindings)
-        	mp.add_forced_key_binding('tab', handle_tab)
-		end
-    end
+	end
+	chat_format = get_output_style()
+	readyMpvAfterSettingsKnown()
 end

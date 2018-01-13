@@ -129,6 +129,9 @@ class VlcPlayer(BasePlayer):
     def setSpeed(self, value):
         self._listener.sendLine("set-rate: {:.2n}".format(value))
 
+    def setFeatures(self, featureList):
+        pass
+
     def setPosition(self, value):
         self._lastVLCPositionUpdate = time.time()
         self._listener.sendLine("set-position: {}".format(value).replace(".",self.radixChar))

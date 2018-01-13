@@ -65,11 +65,15 @@ DEFAULT_CHAT_INPUT_FONT_COLOR = "#FFFF00"
 DEFAULT_CHAT_OUTPUT_FONT_COLOR = "#FFFF00"
 DEFAULT_CHAT_FONT_WEIGHT = 1
 
-# Maximum character lengths (for client and server)
+# Max numbers are used by server (and client pre-connection). Once connected client gets values from server featureList (or uses 'fallback' versions for old servers)
 MAX_CHAT_MESSAGE_LENGTH = 125 # Number of displayed characters
 MAX_USERNAME_LENGTH = 20 # Number of displayed characters
 MAX_ROOM_NAME_LENGTH = 35 # Number of displayed characters
 MAX_FILENAME_LENGTH = 250 # Number of displayed characters
+FALLBACK_MAX_CHAT_MESSAGE_LENGTH = 50 # Number of displayed characters
+FALLBACK_MAX_USERNAME_LENGTH = 16 # Number of displayed characters
+FALLBACK_MAX_ROOM_NAME_LENGTH = 35 # Number of displayed characters
+FALLBACK_MAX_FILENAME_LENGTH = 250 # Number of displayed characters
 
 # Options for the File Switch feature:
 FOLDER_SEARCH_FIRST_FILE_TIMEOUT = 25.0 # Secs - How long to wait to find the first file in folder search (to take account of HDD spin up)
@@ -198,6 +202,7 @@ MPV_SYNCPLAYINTF_OPTIONS_TO_SEND = ["chatInputEnabled","chatInputFontFamily", "c
                                     "notificationTimeout","alertTimeout","chatTimeout","chatOutputEnabled"]
 
 MPV_SYNCPLAYINTF_CONSTANTS_TO_SEND = ["MaxChatMessageLength={}".format(MAX_CHAT_MESSAGE_LENGTH),u"inputPromptStartCharacter={}".format(MPV_INPUT_PROMPT_START_CHARACTER),u"inputPromptEndCharacter={}".format(MPV_INPUT_PROMPT_END_CHARACTER),u"backslashSubstituteCharacter={}".format(MPV_INPUT_BACKSLASH_SUBSTITUTE_CHARACTER)]
+# Note: Constants updated in client.py->checkForFeatureSupport
 MPV_SYNCPLAYINTF_LANGUAGE_TO_SEND = ["mpv-key-tab-hint","mpv-key-hint", "alphakey-mode-warning-first-line", "alphakey-mode-warning-second-line"]
 VLC_SLAVE_ARGS = ['--extraintf=luaintf', '--lua-intf=syncplay', '--no-quiet', '--no-input-fast-seek',
                   '--play-and-pause', '--start-time=0']

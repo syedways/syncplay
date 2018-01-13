@@ -114,6 +114,9 @@ class MplayerPlayer(BasePlayer):
             self.setPaused(self._client.getGlobalPaused())
         self.setPosition(self._client.getGlobalPosition())
 
+    def setFeatures(self, featureList):
+        pass
+
     def setPosition(self, value):
         self._position = max(value,0)
         self._setProperty(self.POSITION_QUERY, "{}".format(value))

@@ -35,6 +35,12 @@ class BasePlayer(object):
         raise NotImplementedError()
 
     '''
+        @type value: list 
+        '''
+    def setFeatures(self, featureList):
+        raise NotImplementedError()
+
+    '''
     @type value: float 
     '''
     def setPosition(self, value):

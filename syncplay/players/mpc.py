@@ -413,6 +413,8 @@ class MPCHCAPIPlayer(BasePlayer):
                 self._mpcApi.pause()
             else:
                 self._mpcApi.unpause()
+    def setFeatures(self, featureList):
+        pass
 
     @retry(MpcHcApi.PlayerNotReadyException, constants.MPC_MAX_RETRIES, constants.MPC_RETRY_WAIT_TIME, 1)
     def setPosition(self, value):

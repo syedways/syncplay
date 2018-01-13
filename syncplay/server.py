@@ -48,6 +48,11 @@ class SyncFactory(Factory):
         features["readiness"] = not self.disableReady
         features["managedRooms"] = True
         features["chat"] = not self.disableChat
+        features["maxChatMessageLength"] = constants.MAX_CHAT_MESSAGE_LENGTH
+        features["maxUsernameLength"] = constants.MAX_USERNAME_LENGTH
+        features["maxRoomNameLength"] = constants.MAX_ROOM_NAME_LENGTH
+        features["maxFilenameLength"] = constants.MAX_FILENAME_LENGTH
+
         return features
 
     def getMotd(self, userIp, username, room, clientVersion):

@@ -224,6 +224,9 @@ class NewMpvPlayer(OldMpvPlayer):
         self._clearFileLoaded()
         self._listener.sendLine(u'loadfile {}'.format(self._quoteArg(filePath)), notReadyAfterThis=True)
 
+    def setFeatures(self, featureList):
+        self.sendMpvOptions()
+
     def setPosition(self, value):
         if value < constants.DO_NOT_RESET_POSITION_THRESHOLD and self._recentlyReset():
             self._client.ui.showDebugMessage("Did not seek as recently reset and {} below 'do not reset position' threshold".format(value))
@@ -247,6 +250,19 @@ class NewMpvPlayer(OldMpvPlayer):
         else:
             self._storePosition(0)
 
+    def sendMpvOptions(self):
+        options = []
+        for option in constants.MPV_SYNCPLAYINTF_OPTIONS_TO_SEND:
+            options.append(u"{}={}".format(option, self._client._config[option]))
+        for option in constants.MPV_SYNCPLAYINTF_CONSTANTS_TO_SEND:
+            options.append(option)
+        for option in constants.MPV_SYNCPLAYINTF_LANGUAGE_TO_SEND:
+            options.append(u"{}={}".format(option, getMessage(option)))
+        options.append(u"OscVisibilityChangeCompatible={}".format(constants.MPV_OSC_VISIBILITY_CHANGE_VERSION))
+        options_string = ", ".join(options)
+        self._listener.sendLine(u'script-message-to syncplayintf set_syncplayintf_options "{}"'.format(options_string))
+        self._setOSDPosition()
+
     def _handleUnknownLine(self, line):
         self.mpvErrorCheck(line)
 
@@ -255,17 +271,7 @@ class NewMpvPlayer(OldMpvPlayer):
             self._listener.sendChat(line[6:-7])
 
         if "<get_syncplayintf_options>" in line:
-            options = []
-            for option in constants.MPV_SYNCPLAYINTF_OPTIONS_TO_SEND:
-                options.append(u"{}={}".format(option,self._client._config[option]))
-            for option in constants.MPV_SYNCPLAYINTF_CONSTANTS_TO_SEND:
-                options.append(option)
-            for option in constants.MPV_SYNCPLAYINTF_LANGUAGE_TO_SEND:
-                options.append(u"{}={}".format(option,getMessage(option)))
-            options.append(u"OscVisibilityChangeCompatible={}".format(constants.MPV_OSC_VISIBILITY_CHANGE_VERSION))
-            options_string = ", ".join(options)
-            self._listener.sendLine(u'script-message-to syncplayintf set_syncplayintf_options "{}"'.format(options_string))
-            self._setOSDPosition()
+            self.sendMpvOptions()
 
         if line == "<SyncplayUpdateFile>" or "Playing:" in line:
             self._listener.setReadyToSend(False)
