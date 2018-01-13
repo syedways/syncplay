@@ -403,6 +403,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.chatInput.setReadOnly(True)
         if not featureList["sharedPlaylists"]:
             self.playlistGroup.setEnabled(False)
+        self.chatInput.setMaxLength(constants.MAX_CHAT_MESSAGE_LENGTH)
+        self.roomInput.setMaxLength(constants.MAX_ROOM_NAME_LENGTH)
 
     def showMessage(self, message, noTimestamp=False):
         message = unicode(message)
