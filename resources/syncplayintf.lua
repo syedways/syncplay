@@ -28,6 +28,8 @@ local BAD_ALERT_TEXT_COLOUR = "0000FF"  -- RBG
 local GOOD_ALERT_TEXT_COLOUR = "00FF00" -- RBG
 local NOTIFICATION_TEXT_COLOUR = "FFFF00" -- RBG
 
+local FONT_SIZE_MULTIPLIER = 2
+
 local chat_log = {}
 
 local assdraw = require "mp.assdraw"
@@ -88,7 +90,7 @@ function add_chat(chat_message, mood)
 end
 
 function chat_update()
-    ass = assdraw.ass_new()
+    local ass = assdraw.ass_new()
 	local chat_ass = ''
     local rowsAdded = 0
     local to_add = ''
@@ -196,10 +198,10 @@ function process_chat_item_scrolling(i)
 	local xpos = CANVAS_WIDTH - (timedelta*MOVEMENT_PER_SECOND)
 	local text = chat_log[i].text
 	if text ~= '' then
-		local roughlen = string.len(text) * opts['chatOutputFontSize'] * 1.5
+		local roughlen = string.len(text) * (opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER) * 1.5
 		if xpos > (-1*roughlen) then
 			local row = chat_log[i].row-1+opts['scrollingFirstRowOffset']
-			local ypos = opts['chatTopMargin']+(row * opts['chatOutputFontSize'])
+			local ypos = opts['chatTopMargin']+(row * (opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER))
 			return format_scrolling(xpos,ypos,text)
 		else
 			chat_log[i].text = ''
@@ -222,10 +224,10 @@ function process_chat_item_subtitle(i)
 	local xpos = CANVAS_WIDTH - (timedelta*MOVEMENT_PER_SECOND)
 	local text = chat_log[i].text
 	if text ~= '' then
-		local roughlen = string.len(text) * opts['chatOutputFontSize']
+		local roughlen = string.len(text) * (opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER)
 		if xpos > (-1*roughlen) then
 			local row = chat_log[i].row
-			local ypos = row * opts['chatOutputFontSize']
+			local ypos = row * (opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER)
             return(format_scrolling(xpos,ypos,text))
 		else
 			chat_log[i].text = ''
@@ -320,7 +322,7 @@ opts = {
     ['OscVisibilityChangeCompatible'] = false,
 	-- Set the font size used for the REPL and the console. This will be
 	-- multiplied by "scale."
-	['chatInputFontSize'] = 20,
+	['chatInputRelativeFontSize'] = 14,
 	['chatInputFontWeight'] = 1,
 	['chatInputFontUnderline'] = false,
 	['chatInputFontColor'] = "#000000",
@@ -417,15 +419,15 @@ function input_ass()
 	local style = '{\\r' ..
 	               '\\1a&H00&\\3a&H00&\\4a&H99&' ..
 	               '\\1c&H'..fontColor..'&\\3c&H111111&\\4c&H000000&' ..
-	               '\\fn' .. opts['chatInputFontFamily'] .. '\\fs' .. opts['chatInputFontSize'] .. '\\b' .. bold ..
+	               '\\fn' .. opts['chatInputFontFamily'] .. '\\fs' .. (opts['chatInputRelativeFontSize']*FONT_SIZE_MULTIPLIER) .. '\\b' .. bold ..
 	               '\\bord2\\xshad0\\yshad1\\fsp0\\q1}'
 
 	local after_style = '{\\u'  .. underline .. '}'
-	local cheight = opts['chatInputFontSize'] * 8
+	local cheight = opts['chatInputRelativeFontSize'] * FONT_SIZE_MULTIPLIER * 8
 	local cglyph = '_'
 	local before_cur = wordwrapify_string(ass_escape(line:sub(1, cursor - 1)))
 	local after_cur = wordwrapify_string(ass_escape(line:sub(cursor)))
-        local secondary_pos = "10,"..tostring(10+opts['chatInputFontSize'])
+        local secondary_pos = "10,"..tostring(10+(opts['chatInputRelativeFontSize']*FONT_SIZE_MULTIPLIER))
 
 	local alignment = 7
 	local position = "5,5"
@@ -434,19 +436,19 @@ function input_ass()
 	if opts['chatInputPosition'] == "Middle" then
 		alignment = 5
 		position = tostring(CANVAS_WIDTH/2)..","..tostring(CANVAS_HEIGHT/2)
-        secondary_pos = tostring(CANVAS_WIDTH/2)..","..tostring((CANVAS_HEIGHT/2)+20+opts['chatInputFontSize'])
+        secondary_pos = tostring(CANVAS_WIDTH/2)..","..tostring((CANVAS_HEIGHT/2)+20+(opts['chatInputRelativeFontSize']*FONT_SIZE_MULTIPLIER))
 		end_marker = "{\\u0}"..opts['inputPromptEndCharacter']
 	elseif opts['chatInputPosition'] == "Bottom" then
 		alignment = 1
 		position = tostring(5)..","..tostring(CANVAS_HEIGHT-5)
-        secondary_pos = "10,"..tostring(CANVAS_HEIGHT-(20+opts['chatInputFontSize']))
+        secondary_pos = "10,"..tostring(CANVAS_HEIGHT-(20+(opts['chatInputRelativeFontSize']*FONT_SIZE_MULTIPLIER)))
     end
 
 	local osd_help_message = opts['mpv-key-hint']
     if opts['chatDirectInput'] then
         osd_help_message = opts['mpv-key-tab-hint'] .. " " .. osd_help_message
     end
-	local help_prompt = '\\N\\n{\\an'..alignment..'\\pos('..secondary_pos..')\\fn' .. opts['chatOutputFontFamily'] .. '\\fs' .. (opts['chatInputFontSize']/1.25) .. '\\1c&H'..HINT_TEXT_COLOUR..'}' .. osd_help_message
+	local help_prompt = '\\N\\n{\\an'..alignment..'\\pos('..secondary_pos..')\\fn' .. opts['chatOutputFontFamily'] .. '\\fs' .. ((opts['chatInputRelativeFontSize']*FONT_SIZE_MULTIPLIER)/1.25) .. '\\1c&H'..HINT_TEXT_COLOUR..'}' .. osd_help_message
 
 	local firststyle = "{\\an"..alignment.."}{\\pos("..position..")}"
 	if opts['chatOutputEnabled'] and opts['chatOutputMode'] == CHAT_MODE_CHATROOM and opts['chatInputPosition'] == "Top" then
@@ -476,7 +478,7 @@ function get_output_style()
 	local style = '{\\r' ..
 	               '\\1a&H00&\\3a&H00&\\4a&H99&' ..
 	               '\\1c&H'..fontColor..'&\\3c&H111111&\\4c&H000000&' ..
-	               '\\fn' .. opts['chatOutputFontFamily'] .. '\\fs' .. opts['chatOutputFontSize'] .. '\\b' .. bold ..
+	               '\\fn' .. opts['chatOutputFontFamily'] .. '\\fs' .. (opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER) .. '\\b' .. bold ..
 	               '\\u'  .. underline .. '\\a5\\MarginV=500' .. '}'
 
 	--mp.osd_message("",0)
@@ -587,7 +589,7 @@ function wordwrapify_string(line)
         if nextChar == currentChar then
             return newstr
 		end
-		charToTest = str:sub(currentChar,nextChar-1)
+		local charToTest = str:sub(currentChar,nextChar-1)
 		if charToTest ~= "\\" and charToTest ~= "{"  and charToTest ~= "}" and charToTest ~= "%" then
 			newstr = newstr .. WORDWRAPIFY_MAGICWORD .. str:sub(currentChar,nextChar-1)
         else
@@ -935,8 +937,8 @@ mp.command('print-text "<get_syncplayintf_options>"')
 
 function readyMpvAfterSettingsKnown()
 	if syncplayintfSet == false then
-		local vertical_output_area = CANVAS_HEIGHT-(opts['chatTopMargin']+opts['chatBottomMargin']+(opts['chatOutputFontSize']*opts['scrollingFirstRowOffset'])+SCROLLING_ADDITIONAL_BOTTOM_MARGIN)
-		max_scrolling_rows = math.floor(vertical_output_area/opts['chatOutputFontSize'])
+        local vertical_output_area = CANVAS_HEIGHT-(opts['chatTopMargin']+opts['chatBottomMargin']+((opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER)*opts['scrollingFirstRowOffset'])+SCROLLING_ADDITIONAL_BOTTOM_MARGIN)
+		max_scrolling_rows = math.floor(vertical_output_area/(opts['chatOutputRelativeFontSize']*FONT_SIZE_MULTIPLIER))
 		local user_opts = { visibility = "auto", }
 		opt.read_options(user_opts, "osc")
 		default_oscvisibility_state = user_opts.visibility
@@ -948,7 +950,7 @@ function readyMpvAfterSettingsKnown()
 				add_repl_alpharow_bindings(alpharowbindings)
 				mp.add_forced_key_binding('tab', handle_tab)
 			end
-        end
+        end 
         syncplayintfSet = true
     end
 end

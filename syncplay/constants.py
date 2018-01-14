@@ -60,7 +60,7 @@ TAB_PADDING = 30
 DEFAULT_WINDOWS_MONOSPACE_FONT = "Consolas"
 DEFAULT_OSX_MONOSPACE_FONT = "Menlo"
 FALLBACK_MONOSPACE_FONT = "Monospace"
-DEFAULT_CHAT_FONT_SIZE = 48
+DEFAULT_CHAT_FONT_SIZE = 24
 DEFAULT_CHAT_INPUT_FONT_COLOR = "#FFFF00"
 DEFAULT_CHAT_OUTPUT_FONT_COLOR = "#FFFF00"
 DEFAULT_CHAT_FONT_WEIGHT = 1
@@ -195,8 +195,8 @@ MPV_OSC_VISIBILITY_CHANGE_VERSION = False
 MPV_INPUT_PROMPT_START_CHARACTER = u"〉"
 MPV_INPUT_PROMPT_END_CHARACTER = u" 〈"
 MPV_INPUT_BACKSLASH_SUBSTITUTE_CHARACTER = u"＼"
-MPV_SYNCPLAYINTF_OPTIONS_TO_SEND = ["chatInputEnabled","chatInputFontFamily", "chatInputFontSize", "chatInputFontWeight","chatInputFontUnderline",
-                                    "chatInputFontColor", "chatInputPosition","chatOutputFontFamily","chatOutputFontSize",
+MPV_SYNCPLAYINTF_OPTIONS_TO_SEND = ["chatInputEnabled","chatInputFontFamily", "chatInputRelativeFontSize", "chatInputFontWeight","chatInputFontUnderline",
+                                    "chatInputFontColor", "chatInputPosition","chatOutputFontFamily","chatOutputRelativeFontSize",
                                     "chatOutputFontWeight","chatOutputFontUnderline","chatOutputMode","chatMaxLines",
                                     "chatTopMargin","chatLeftMargin","chatBottomMargin","chatDirectInput",
                                     "notificationTimeout","alertTimeout","chatTimeout","chatOutputEnabled"]

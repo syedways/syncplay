@@ -1001,13 +1001,13 @@ class ConfigDialog(QtWidgets.QDialog):
     def fontDialog(self, configName):
             font = QtGui.QFont()
             font.setFamily(self.config[configName+ u"FontFamily"])
-            font.setPointSize(self.config[configName + u"FontSize"])
+            font.setPointSize(self.config[configName + u"RelativeFontSize"])
             font.setWeight(self.config[configName + u"FontWeight"])
             font.setUnderline(self.config[configName + u"FontUnderline"])
             value, ok = QtWidgets.QFontDialog.getFont(font)
             if ok:
                 self.config[configName + u"FontFamily"] = value.family()
-                self.config[configName + u"FontSize"] = value.pointSize()
+                self.config[configName + u"RelativeFontSize"] = value.pointSize()
                 self.config[configName + u"FontWeight"] = value.weight()
                 self.config[configName + u"FontUnderline"] = value.underline()
 
