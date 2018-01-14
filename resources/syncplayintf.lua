@@ -1,6 +1,24 @@
 -- syncplayintf.lua -- An interface for communication between mpv and Syncplay
--- Author: Etoh
+-- Author: Etoh, utilising repl.lua code by James Ross-Gowan (see below)
 -- Thanks: RiCON, James Ross-Gowan, Argon-, wm4, uau
+
+-- Includes code copied/adapted from repl.lua -- A graphical REPL for mpv input commands
+--
+-- c 2016, James Ross-Gowan
+--
+-- Permission to use, copy, modify, and/or distribute this software for any
+-- purpose with or without fee is hereby granted, provided that the above
+-- copyright notice and this permission notice appear in all copies.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+-- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+-- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+-- SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+-- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
+-- OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
+-- CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+-- See https://github.com/rossy/mpv-repl for a copy of repl.lua
 
 local CANVAS_WIDTH = 1920
 local CANVAS_HEIGHT = 1080
@@ -294,22 +312,6 @@ end)
 mp.register_script_message('set_syncplayintf_options', function(e)
 	set_syncplayintf_options(e)
 end)
-
--- adapted from repl.lua -- A graphical REPL for mpv input commands
---
--- c 2016, James Ross-Gowan
---
--- Permission to use, copy, modify, and/or distribute this software for any
--- purpose with or without fee is hereby granted, provided that the above
--- copyright notice and this permission notice appear in all copies.
---
--- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
--- WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
--- MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
--- SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
--- WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
--- OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
--- CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -- Default options
 local utils = require 'mp.utils'
