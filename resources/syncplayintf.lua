@@ -36,6 +36,12 @@ local assdraw = require "mp.assdraw"
 
 local opt = require 'mp.options'
 
+local repl_active = false
+local insert_mode = false
+local line = ''
+local cursor = 1
+local key_hints_enabled = false
+
 function format_scrolling(xpos, ypos, text)
 	local chat_message = "\n"..chat_format .. "{\\pos("..xpos..","..ypos..")\\q2}"..text.."\\N\\n"
     return string.format(chat_message)
@@ -97,7 +103,7 @@ function chat_update()
     local incrementRow = 0
     if opts['chatOutputMode'] == CHAT_MODE_CHATROOM and chat_log ~= {} then
         local timedelta = mp.get_time() - last_chat_time
-		if timedelta >= opts['chatTimeout'] and not repl_active then
+		if timedelta >= opts['chatTimeout'] then
             clear_chat()
         end
     end
@@ -395,16 +401,11 @@ function update()
 	return
 end
 
-local repl_active = false
-local insert_mode = false
-local line = ''
-local cursor = 1
-local key_hints_enabled = false
-
 function input_ass()
 	if not repl_active then
 		return ""
-	end
+    end
+    last_chat_time = mp.get_time() -- to keep chat messages showing while entering input
 	local bold
 	if opts['chatInputFontWeight'] < 75 then
 		bold = 0
