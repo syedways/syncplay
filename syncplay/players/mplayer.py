@@ -12,7 +12,7 @@ from syncplay.utils import isWindows
 class MplayerPlayer(BasePlayer):
     speedSupported = True
     customOpenDialog = False
-    aletOSDSupported = True
+    alertOSDSupported = False
     chatOSDSupported = False
     osdMessageSeparator = "; "
 
@@ -298,6 +298,9 @@ class MplayerPlayer(BasePlayer):
             self.lastSendTime = None
             self.lastNotReadyTime = None
             self.__playerController = playerController
+            if not self.__playerController._client._config["chatOutputEnabled"]:
+                self.__playerController.alertOSDSupported = False
+                self.__playerController.chatOSDSupported = False
             if self.__playerController.getPlayerPathErrors(playerPath,filePath):
                 raise ValueError()
             if filePath and '://' not in filePath:

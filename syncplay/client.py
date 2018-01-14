@@ -1416,7 +1416,7 @@ class UiManager(object):
 
     def showChatMessage(self, username, userMessage):
         messageString = u"<{}> {}".format(username, userMessage)
-        if self._client._player.alertOSDSupported:
+        if self._client._player.chatOSDSupported and self._client._config["chatOutputEnabled"]:
             self._client._player.displayChatMessage(username,userMessage)
         else:
             self.showOSDMessage(messageString, duration=constants.OSD_DURATION)

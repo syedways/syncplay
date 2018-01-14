@@ -309,7 +309,6 @@ class MPCHCAPIPlayer(BasePlayer):
     alertOSDSupported = False
     customOpenDialog = False
     chatOSDSupported = False
-    alertOSDSupported = False
     osdMessageSeparator = "; "
 
     def __init__(self, client):
