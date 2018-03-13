@@ -50,10 +50,11 @@ en = {
 
     "file-different-notification" : "File you are playing appears to be different from {}'s",  # User
     "file-differences-notification" : u"Your file differs in the following way(s): {}", # Differences
-    "room-file-differences" : u"File differences: {}", # File differences (filename, size, and/or duration)
+    "room-file-differences" : u"File differences: {}", # File differences (filename, size, duration and/or checksum)
     "file-difference-filename" : u"name",
     "file-difference-filesize" : u"size",
     "file-difference-duration" : u"duration",
+    "file-difference-checksum" : u"checksum",
     "alone-in-the-room": u"You're alone in the room",
 
     "different-filesize-notification" : u" (their file size is different from yours!)",

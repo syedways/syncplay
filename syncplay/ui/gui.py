@@ -13,7 +13,7 @@ from datetime import datetime
 from syncplay.utils import isLinux, isWindows, isMacOS
 import re
 import os
-from syncplay.utils import formatTime, sameFilename, sameFilesize, sameFileduration, RoomPasswordProvider, formatSize, isURL
+from syncplay.utils import formatTime, sameFilename, sameFilesize, sameFileduration, sameFilechecksum, RoomPasswordProvider, formatSize, isURL
 from functools import wraps
 from twisted.internet import task
 from syncplay.ui.consoleUI import ConsoleUI
@@ -498,6 +498,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 if user.file:
                     filesizeitem = QtGui.QStandardItem(formatSize(user.file['size']))
                     filedurationitem = QtGui.QStandardItem(u"({})".format(formatTime(user.file['duration'])))
+                    filechecksumitem = QtGui.QStandardItem(str(user.file['checksum']))
                     filename = user.file['name']
                     if isURL(filename):
                         filename = urllib.unquote(filename)
@@ -517,6 +518,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         sameName = sameFilename(user.file['name'], currentUser.file['name'])
                         sameSize = sameFilesize(user.file['size'], currentUser.file['size'])
                         sameDuration = sameFileduration(user.file['duration'], currentUser.file['duration'])
+                        sameCheckSum = sameFilechecksum(user.file['checksum'], currentUser.file['checksum'])
                         underlinefont = QtGui.QFont()
                         underlinefont.setUnderline(True)
                         if sameRoom:
@@ -531,10 +533,14 @@ class MainWindow(QtWidgets.QMainWindow):
                             if not sameDuration:
                                 filedurationitem.setForeground(QtGui.QBrush(QtGui.QColor(constants.STYLE_DIFFERENTITEM_COLOR)))
                                 filedurationitem.setFont(underlinefont)
+                            if not sameCheckSum:
+                                filechecksumitem.setForeground(QtGui.QBrush(QtGui.QColor(constants.STYLE_DIFFERENTITEM_COLOR)))
+                                filechecksumitem.setFont(underlinefont)
                 else:
                     filenameitem = QtGui.QStandardItem(getMessage("nofile-note"))
                     filedurationitem = QtGui.QStandardItem("")
                     filesizeitem = QtGui.QStandardItem("")
+                    filechecksum = QtGui.QStandardItem("")
                     if room == currentUser.room:
                         filenameitem.setForeground(QtGui.QBrush(QtGui.QColor(constants.STYLE_NOFILEITEM_COLOR)))
                 font = QtGui.QFont()
@@ -548,7 +554,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 filenameitem.setFlags(filenameitem.flags() & ~Qt.ItemIsEditable)
                 filesizeitem.setFlags(filesizeitem.flags() & ~Qt.ItemIsEditable)
                 filedurationitem.setFlags(filedurationitem.flags() & ~Qt.ItemIsEditable)
-                roomitem.appendRow((useritem, filesizeitem, filedurationitem, filenameitem))
+                filechecksum.setFlags(filechecksum.flags() & ~Qt.ItemIsEditable)
+                roomitem.appendRow((useritem, filesizeitem, filedurationitem, filenameitem, filechecksum))
         self.listTreeModel = self._usertreebuffer
         self.listTreeView.setModel(self.listTreeModel)
         self.listTreeView.setItemDelegate(UserlistItemDelegate())

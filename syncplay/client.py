@@ -464,7 +464,8 @@ class SyncplayClient(object):
         if not utils.isURL(path) and os.path.exists(path):
             self.fileSwitch.notifyUserIfFileNotInMediaDirectory(filename, path)
         filename, size = self.__executePrivacySettings(filename, size)
-        self.userlist.currentUser.setFile(filename, duration, size, path)
+        checksum = utils.checksumFile(filename)
+        self.userlist.currentUser.setFile(filename, duration, size, path, checksum)
         self.sendFile()
         self.playlist.changeToPlaylistIndexFromFilename(filename)
 
@@ -1056,11 +1057,12 @@ class SyncplayUser(object):
         self._controller = False
         self._features = {}
 
-    def setFile(self, filename, duration, size, path=None):
+    def setFile(self, filename, duration, size, checksum, path=None, ):
         file_ = {
             "name": filename,
             "duration": duration,
             "size": size,
+            "checksum": checksum,
             "path": path
         }
         self.file = file_
@@ -1071,7 +1073,8 @@ class SyncplayUser(object):
         sameName = utils.sameFilename(self.file['name'], file_['name'])
         sameSize = utils.sameFilesize(self.file['size'], file_['size'])
         sameDuration = utils.sameFileduration(self.file['duration'], file_['duration'])
-        return sameName and sameSize and sameDuration
+        sameChecksum = utils.sameFilechecksum(self.file['checksum'], file_['checksum'])
+        return sameName and sameSize and sameDuration and sameChecksum
 
     def __lt__(self, other):
         if self.isController() == other.isController():
@@ -1081,7 +1084,7 @@ class SyncplayUser(object):
 
     def __repr__(self, *args, **kwargs):
         if self.file:
-            return u"{}: {} ({}, {})".format(self.username, self.file['name'], self.file['duration'], self.file['size'])
+            return u"{}: {} ({}, {})".format(self.username, self.file['name'], self.file['duration'], self.file['size'], self.file['checksum'])
         else:
             return u"{}".format(self.username)
 
@@ -1164,9 +1167,11 @@ class SyncplayUserlist(object):
         differentName     = not utils.sameFilename(currentUserFile['name'], otherUserFile['name'])
         differentSize     = not utils.sameFilesize(currentUserFile['size'], otherUserFile['size'])                  
         differentDuration = not utils.sameFileduration(currentUserFile['duration'], otherUserFile['duration'])
+        differentChecksum = not utils.sameFilechecksum(currentUserFile['checksum'], otherUserFile['checksum'])
         if differentName:     differences.append(getMessage("file-difference-filename"))
         if differentSize:     differences.append(getMessage("file-difference-filesize"))
         if differentDuration: differences.append(getMessage("file-difference-duration"))
+        if differentDuration: differences.append(getMessage("file-difference-checksum"))
         return ", ".join(differences)
 
     def getFileDifferencesForRoom(self):

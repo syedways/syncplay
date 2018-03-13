@@ -50,7 +50,7 @@ de = {
 
     "file-different-notification" : u"Deine Datei scheint sich von {}s zu unterscheiden",  # User
     "file-differences-notification" : u"Deine Datei unterscheidet sich auf folgende Art: {}",
-    "room-file-differences" : u"Unterschiedlich in: {}", # File differences (filename, size, and/or duration)
+    "room-file-differences" : u"Unterschiedlich in: {}", # File differences (filename, size, duration and/or checksum)
     "file-difference-filename" : u"Name",
     "file-difference-filesize" : u"Größe",
     "file-difference-duration" : u"Dauer",

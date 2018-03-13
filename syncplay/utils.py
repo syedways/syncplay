@@ -14,6 +14,7 @@ import ast
 import unicodedata
 import platform
 import subprocess
+import zlib
 
 folderSearchEnabled = True
 
@@ -253,6 +254,17 @@ def stripRoomName(RoomName):
     else:
         return ""
 
+def checksumFile(filename):
+    hashlist = []
+    try:
+        with open(filename, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                    hashlist.append(hex(zlib.adler32(chunk)))
+    except IOError:
+        pass
+    return hex(zlib.adler32("".join(hashlist)))
+
+
 def hashFilename(filename, stripURL = False):
     if isURL(filename):
         stripURL = True
@@ -282,7 +294,7 @@ def sameHashed(string1raw, string1hashed, string2raw, string2hashed):
     elif string1hashed == string2hashed:
         return True
 
-def sameFilename (filename1, filename2):
+def sameFilename(filename1, filename2):
     try:
         filename1 = filename1.encode('utf-8')
     except UnicodeDecodeError:
@@ -314,6 +326,11 @@ def sameFileduration (duration1, duration2):
         return True
     else:
         return False
+
+def sameFilechecksum(checksum1, checksum2):
+    if str(checksum1) == str(checksum2):
+        return True
+    return False
 
 def meetsMinVersion(version, minVersion):
     def versiontotuple(ver):
