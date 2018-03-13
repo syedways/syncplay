@@ -1171,7 +1171,7 @@ class SyncplayUserlist(object):
         if differentName:     differences.append(getMessage("file-difference-filename"))
         if differentSize:     differences.append(getMessage("file-difference-filesize"))
         if differentDuration: differences.append(getMessage("file-difference-duration"))
-        if differentDuration: differences.append(getMessage("file-difference-checksum"))
+        if differentChecksum: differences.append(getMessage("file-difference-checksum"))
         return ", ".join(differences)
 
     def getFileDifferencesForRoom(self):
